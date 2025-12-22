@@ -1,8 +1,4 @@
 # С помощью этого класса я сохраняю разные текстовые объекты
-import json
-import csv
-import os
-
 class PATHDocs:
     path = os.getcwd()
     name_file = 'file'
@@ -52,7 +48,7 @@ class PATHDocs:
                 txt_file.writelines(new_file_data)
                 txt_file.writelines('\n')
             else:
-                txt_file.write(file_data)
+                txt_file.write(str(file_data))
                 txt_file.write('\n')
 
     def craft_json(self, file_data):
@@ -94,9 +90,5 @@ class PATHDocs:
         data_list.extend(file_data) if type(file_data) is list else data_list.append(file_data)
         with open(user_path, 'w', encoding='utf-8', newline='\n') as csv_file_write:
             writer = csv.DictWriter(csv_file_write, fieldnames=file_hedders)
-            writer.writeheader()  # Запись заголовков
-            writer.writerows(data_list)  # Запись всех данных
-        with open(user_path, 'w', encoding='utf-8', newline='\n') as csv_file_write:
-            writer = csv.DictWriter(csv_file_write, fieldnames=file_hedders)
-            writer.writeheader()  # Запись заголовков
-            writer.writerows(data_list)  # Запись всех данных
+            writer.writeheader()
+            writer.writerows(data_list)
