@@ -5,10 +5,8 @@ import os
 
 
 class PATHDocs:
-    
     path = os.getcwd()
     name_file = 'file'
-    
     
     def __init__(self, ney_path=None, doc_format = 'txt', ney_name_file = None, status = 'a', validate=True):
         self.ney_patch = ney_path if ney_path is not None else self.path
@@ -16,7 +14,6 @@ class PATHDocs:
         self.ney_name_file = ney_name_file if ney_name_file is not None else self.name_file
         self.status = status
         self.validate = validate
-
     
     def __craft_path(self):
         # Создаю путь к файлу, если его нет и возвращаю его
@@ -26,7 +23,6 @@ class PATHDocs:
 
         return user_path
 
-    
     @staticmethod
     def __is_correct_json(file):
         try:
@@ -35,7 +31,6 @@ class PATHDocs:
         except:
             return False
 
-    
     @staticmethod
     def __is_correct_csv_hedders(file, headers):
         if not os.path.exists(file):
@@ -50,7 +45,6 @@ class PATHDocs:
                     return False
         except Exception as e:
             raise ValueError(f"Не удалось прочитать заголовки из файла: {e}")
-
     
     def craft_txt(self, file_data):
         user_path = self.__craft_path()
@@ -63,7 +57,6 @@ class PATHDocs:
                 txt_file.write(str(file_data))
                 txt_file.write('\n')
 
-    
     def craft_json(self, file_data):
         user_path = self.__craft_path()
 
@@ -85,7 +78,6 @@ class PATHDocs:
         with open(user_path, 'w', encoding='utf-8') as json_file_write:
             json.dump(data_list, json_file_write, ensure_ascii=False, indent=4)
 
-    
     def craft_csv(self, file_data, file_hedders):
         user_path = self.__craft_path()
 
