@@ -1,4 +1,8 @@
 # С помощью этого класса я сохраняю разные текстовые объекты
+import json
+import csv
+import os
+
 class PATHDocs:
     path = os.getcwd()
     name_file = 'file'
@@ -59,7 +63,7 @@ class PATHDocs:
                 raise ValueError(f"❌ Указанное значение {file_data} не подходит для записи в json")
 
         data_list = []
-        if self.status == 'a':
+        if self.status == 'a' and os.path.exists(user_path):
             with open(user_path, 'r', encoding='utf-8') as json_file_read:
                 try:
                     data_list = json.load(json_file_read)
@@ -68,9 +72,9 @@ class PATHDocs:
                 except json.decoder.JSONDecodeError:
                     data_list = []
 
-            data_list.append(file_data)
-            with open(user_path, 'w', encoding='utf-8') as json_file_write:
-                json.dump(data_list, json_file_write, ensure_ascii=False, indent=4)
+        data_list.append(file_data)
+        with open(user_path, 'w', encoding='utf-8') as json_file_write:
+            json.dump(data_list, json_file_write, ensure_ascii=False, indent=4)
 
 
     def craft_csv(self, file_data, file_hedders):
@@ -81,13 +85,17 @@ class PATHDocs:
                 raise ValueError(f"❌ заданные заголовки не равны заголовкам из файла")
 
         data_list = []
-        if self.status == 'a':
+        if self.status == 'a' and os.path.exists(user_path):
             with open(user_path, 'r', encoding='utf-8') as csv_file_read:
                 data_list = list(csv.DictReader(csv_file_read))
                 if not isinstance(data_list, list):
                     data_list = []
 
         data_list.extend(file_data) if type(file_data) is list else data_list.append(file_data)
+        with open(user_path, 'w', encoding='utf-8', newline='\n') as csv_file_write:
+            writer = csv.DictWriter(csv_file_write, fieldnames=file_hedders)
+            writer.writeheader()  # Запись заголовков
+            writer.writerows(data_list)  # Запись всех данных
         with open(user_path, 'w', encoding='utf-8', newline='\n') as csv_file_write:
             writer = csv.DictWriter(csv_file_write, fieldnames=file_hedders)
             writer.writeheader()  # Запись заголовков
