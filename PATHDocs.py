@@ -5,16 +5,18 @@ import os
 
 
 class PATHDocs:
+    # Поддерживает форматы записи: txt, json, csv, jsonl
+    # При объявлении класса укажи путь, имя файла, формат записи, включение проверки
+
     path = os.getcwd()
     name_file = 'file'
-    
     def __init__(self, ney_path=None, doc_format = 'txt', ney_name_file = None, status = 'a', validate=True):
         self.ney_patch = ney_path if ney_path is not None else self.path
         self.doc_format = doc_format
         self.ney_name_file = ney_name_file if ney_name_file is not None else self.name_file
         self.status = status
         self.validate = validate
-    
+
     def __craft_path(self):
         # Создаю путь к файлу, если его нет и возвращаю его
         user_path = os.path.join(self.ney_patch, (self.ney_name_file + f".{self.doc_format}"))
@@ -45,7 +47,7 @@ class PATHDocs:
                     return False
         except Exception as e:
             raise ValueError(f"Не удалось прочитать заголовки из файла: {e}")
-    
+
     def craft_txt(self, file_data):
         user_path = self.__craft_path()
         with open(user_path, self.status, encoding='utf-8', newline='\n') as txt_file:
@@ -78,6 +80,7 @@ class PATHDocs:
         with open(user_path, 'w', encoding='utf-8') as json_file_write:
             json.dump(data_list, json_file_write, ensure_ascii=False, indent=4)
 
+
     def craft_csv(self, file_data, file_hedders):
         user_path = self.__craft_path()
 
@@ -97,3 +100,14 @@ class PATHDocs:
             writer = csv.DictWriter(csv_file_write, fieldnames=file_hedders)
             writer.writeheader()
             writer.writerows(data_list)
+
+
+    def craft_jsonl(self, file_data):
+        user_path = self.__craft_path()
+
+        if self.validate:
+            if not self.__is_correct_json(file_data):
+                raise ValueError(f"❌ Указанное значение {file_data} не подходит для записи в json")
+
+        with open(user_path, 'a', encoding='utf-8') as json_file:
+            json_file.write(json.dumps(file_data, ensure_ascii=False) + '\n')
