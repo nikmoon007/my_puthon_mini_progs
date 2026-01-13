@@ -262,4 +262,25 @@ logg.setup_exit_logging(logger) # вызывается 1 раз, ловит вс
 # Когда нужно вызвать лог для записи данных, просто пиши в каждую функцию/класс итд, чем больше таких вызовов, тем больше запишется
 logger.info("Просто лог", extra={'params_name': 'ManualLog', 'params_value': 100})
 
+__________________________________
+Если нужно записать сетевой лог, то лучше делать это так:
+logg = LoggerSaveJSL('DEBUG')
+logger = logg.save_http_logs('text_test.logs')
+logg.setup_exit_logging(logger)
+
+
+res = requests.get('https://www.google.com/?hl=ru')
+zn = res.__dict__
+logger.debug("Сетевой лог", extra=\
+        {
+            'status_code': zn['status_code'],
+            'headers': zn['headers'],
+            'url' : zn['url'],
+            'request' : zn['request'],
+            'cookies' : zn['cookies'],
+            'elapsed' : zn['elapsed'],
+            'result' : res.text[:100] # может передавать и res.json
+        }
+                 )
+
 """
